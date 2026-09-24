@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temu利润计算器 | 跨境单品利润测算</title>
+    <meta name="description" content="Temu卖家利润计算器，输入成本、运费、售价、平台扣费，一键计算单品净利润、毛利率。">
+    <style>
+        *{box-sizing:border-box;font-family:system-ui,sans-serif;margin:0;padding:0}
+        body{background:#f5f7fa;padding:20px;max-width:700px;margin:0 auto}
+        .card{background:#fff;padding:24px;border-radius:12px;box-shadow:0 2px 10px #00000012}
+        h1{text-align:center;color:#222;margin-bottom:24px;font-size:22px}
+        .row{margin-bottom:16px}
+        label{display:block;margin-bottom:6px;color:#444}
+        input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:16px}
+        button{width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:6px;font-size:17px;cursor:pointer;margin-top:8px}
+        .result{margin-top:20px;padding:16px;background:#f0f7ff;border-radius:8px;line-height:1.8}
+        .red{color:#dc2626;font-weight:bold}
+        .green{color:#16a34a;font-weight:bold}
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>Temu单品利润计算器</h1>
+    <div class="row">
+        <label>产品供货成本（元）</label>
+        <input id="cost" type="number" placeholder="采购出厂成本">
+    </div>
+    <div class="row">
+        <label>头程运费（元）</label>
+        <input id="freight" type="number" placeholder="国内到Temu仓运费">
+    </div>
+    <div class="row">
+        <label>Temu售价（元）</label>
+        <input id="salePrice" type="number" placeholder="平台销售价格">
+    </div>
+    <div class="row">
+        <label>平台佣金/扣费合计（元）</label>
+        <input id="fee" type="number" placeholder="佣金、售后、物流扣费总和">
+    </div>
+    <button onclick="calcProfit()">计算利润</button>
+    <div class="result" id="resultBox"></div>
+</div>
+<script>
+function calcProfit(){
+    const cost = Number(document.getElementById('cost').value)||0;
+    const freight = Number(document.getElementById('freight').value)||0;
+    const salePrice = Number(document.getElementById('salePrice').value)||0;
+    const fee = Number(document.getElementById('fee').value)||0;
+
+    const totalCost = cost + freight + fee;
+    const profit = salePrice - totalCost;
+    const rate = salePrice>0 ? (profit / salePrice *100).toFixed(2) :0;
+
+    let html = `
+    总成本：${totalCost.toFixed(2)} 元<br>
+    单品净利润：<span class="${profit>=0?'green':'red'}">${profit.toFixed(2)} 元</span><br>
+    毛利率：<span class="${profit>=0?'green':'red'}">${rate} %</span>
+    `
+    document.getElementById('resultBox').innerHTML = html;
+}
+</script>
+</body>
+</html>
