@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>货币估算 | Temu跨境卖家工具</title>
+    <title><span class="lang zh">货币估算 | Temu跨境卖家工具</span><span class="lang en" style="display:none">Currency Estimate | Cross-border Seller Tool</span></title>
     <style>
         * {
             box-sizing: border-box;
-            margin:0;
-            padding:0;
-            font-family:system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
         }
         body {
-            background-color:#f3f4f6;
+            background-color: #f3f4f6;
             padding:30px 15px;
         }
         .container{
@@ -30,13 +30,7 @@
             background:#fff;
             padding:24px;
             border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.08);
-        }
-        h1{
-            text-align:center;
-            color:#1f2937;
-            margin-bottom:24px;
-            font-size:22px;
+            box-shadow:0 1px 3px #0000001a;
         }
         .row{
             margin:16px 0;
@@ -44,55 +38,88 @@
         label{
             display:block;
             margin-bottom:6px;
-            color:#444;
         }
-        input,select{
+        input{
             width:100%;
             padding:10px;
-            font-size:16px;
-            border:1px solid #ccc;
+            border:1px solid #ddd;
             border-radius:6px;
+            font-size:16px;
+        }
+        select{
+            width:100%;
+            padding:10px;
+            border:1px solid #ddd;
+            border-radius:6px;
+            font-size:16px;
         }
         #result{
             margin-top:20px;
-            padding:14px;
-            background:#f0f7ff;
-            border-radius:8px;
-            font-size:17px;
+            font-size:18px;
+            font-weight:bold;
         }
         .tip{
-            margin-top:12px;
-            font-size:13px;
             color:#666;
+            font-size:14px;
+            margin-top:6px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="back">
-            <a href="index.html">← 返回工具箱首页</a>
+<div class="container">
+    <div class="back">
+        <a href="./index.html">
+            <span class="lang zh">← 返回首页</span>
+            <span class="lang en" style="display:none">← Back Home</span>
+        </a>
+    </div>
+    <div style="margin-bottom:20px;">
+        <button onclick="switchLang('zh')">中文</button>
+        <button onclick="switchLang('en')">English</button>
+    </div>
+    <div class="card">
+        <h1>
+            <span class="lang zh">货币估算 CNY ↔ USD</span>
+            <span class="lang en" style="display:none">Currency Estimate CNY ↔ USD</span>
+        </h1>
+        <p class="tip">
+            <span class="lang zh">仅用于卖家粗略估算，非实时银行牌价</span>
+            <span class="lang en" style="display:none">For rough estimate only, not real bank rate</span>
+        </p>
+        <div class="row">
+            <label>
+                <span class="lang zh">输入金额</span>
+                <span class="lang en" style="display:none">Enter Amount</span>
+            </label>
+            <input type="number" class="trans-placeholder" id="num" data-zh="输入金额" data-en="Input amount">
         </div>
-        <div class="card">
-            <h1>货币估算换算</h1>
-            <div class="row">
-                <label>输入金额</label>
-                <input id="num" type="number" placeholder="输入金额">
+        <div class="row">
+            <label>
+                <span class="lang zh">转换方向</span>
+                <span class="lang en" style="display:none">Convert Direction</span>
+            </label>
+            <select id="type">
+                <option value="rmb2usd">CNY → USD</option>
+                <option value="usd2rmb">USD → CNY</option>
+            </select>
+        </div>
+        <div class="row">
+            <label>
+                <span class="lang zh">自定义汇率</span>
+                <span class="lang en" style="display:none">Custom Rate</span>
+            </label>
+            <input id="rate" type="number" step="0.0001" value="7.2">
+            <div class="tip">
+                <span class="lang zh">可手动修改</span>
+                <span class="lang en" style="display:none">Editable manually</span>
             </div>
-            <div class="row">
-                <label>换算类型</label>
-                <select id="type">
-                    <option value="rmb2usd">人民币(CNY) → 美元(USD)</option>
-                    <option value="usd2rmb">美元(USD) → 人民币(CNY)</option>
-                </select>
-            </div>
-            <div class="row">
-                <label>自定义汇率</label>
-                <input id="rate" type="number" step="0.0001" value="7.2">
-                <div class="tip">⚠️可手动修改，仅用于卖家粗略估算，非实时银行牌价</div>
-            </div>
-            <div id="result">换算结果将显示在这里</div>
+        </div>
+        <div id="result">
+            <span class="lang zh">换算结果将显示在这里</span>
+            <span class="lang en" style="display:none">Conversion result will show here</span>
         </div>
     </div>
+</div>
 
 <script>
 function calc(){
@@ -113,6 +140,25 @@ function calc(){
 document.getElementById('num').oninput = calc;
 document.getElementById('type').onchange = calc;
 document.getElementById('rate').oninput = calc;
+
+let currentLang = "en";
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("webLang", lang);
+    document.querySelectorAll(".lang").forEach(el => {
+        el.style.display = el.classList.contains(lang) ? "inline" : "none";
+    });
+    document.querySelectorAll(".trans-placeholder").forEach(input => {
+        input.placeholder = input.dataset[lang];
+    });
+}
+window.onload = function () {
+  const savedLang = localStorage.getItem("webLang");
+  if(savedLang){
+    currentLang = savedLang;
+  }
+  switchLang(currentLang);
+}
 </script>
 </body>
 </html>

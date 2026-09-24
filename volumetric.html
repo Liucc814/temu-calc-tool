@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>材积重计算器 | Temu跨境卖家工具</title>
+    <title><span class="lang zh">体积重计算器 | Temu跨境卖家工具</span><span class="lang en" style="display:none">Volumetric Weight | Cross-border Seller Tool</span></title>
     <style>
         * {
             box-sizing: border-box;
-            margin:0;
-            padding:0;
-            font-family:system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
         }
         body {
-            background-color:#f3f4f6;
+            background-color: #f3f4f6;
             padding:30px 15px;
         }
         .container{
@@ -30,13 +30,7 @@
             background:#fff;
             padding:24px;
             border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.08);
-        }
-        h1{
-            text-align:center;
-            color:#1f2937;
-            margin-bottom:24px;
-            font-size:22px;
+            box-shadow:0 1px 3px #0000001a;
         }
         .row{
             margin:16px 0;
@@ -44,84 +38,116 @@
         label{
             display:block;
             margin-bottom:6px;
-            color:#444;
         }
-        input,select{
+        input{
             width:100%;
             padding:10px;
-            font-size:16px;
-            border:1px solid #ccc;
+            border:1px solid #ddd;
             border-radius:6px;
+            font-size:16px;
         }
         #result{
             margin-top:20px;
-            padding:14px;
-            background:#f0f7ff;
-            border-radius:8px;
-            font-size:17px;
+            font-size:18px;
+            font-weight:bold;
+        }
+        .tip{
+            color:#666;
+            font-size:14px;
+            margin-top:6px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="back">
-            <a href="index.html">← 返回工具箱首页</a>
+<div class="container">
+    <div class="back">
+        <a href="./index.html">
+            <span class="lang zh">← 返回首页</span>
+            <span class="lang en" style="display:none">← Back Home</span>
+        </a>
+    </div>
+    <div style="margin-bottom:20px;">
+        <button onclick="switchLang('zh')">中文</button>
+        <button onclick="switchLang('en')">English</button>
+    </div>
+    <div class="card">
+        <h1>
+            <span class="lang zh">体积重计算 (cm)</span>
+            <span class="lang en" style="display:none">Volumetric Weight (cm)</span>
+        </h1>
+        <p class="tip">
+            <span class="lang zh">体积重=长×宽×高 / 6000</span>
+            <span class="lang en" style="display:none">Vol Wt = L×W×H / 6000</span>
+        </p>
+
+        <div class="row">
+            <label>
+                <span class="lang zh">长 cm</span>
+                <span class="lang en" style="display:none">Length cm</span>
+            </label>
+            <input type="number" class="trans-placeholder" id="l" data-zh="输入长度" data-en="Input length">
         </div>
-        <div class="card">
-            <h1>材积重（体积重）计算器</h1>
-            <div class="row">
-                <label>长 cm</label>
-                <input id="length" type="number" placeholder="包裹长度">
-            </div>
-            <div class="row">
-                <label>宽 cm</label>
-                <input id="width" type="number" placeholder="包裹宽度">
-            </div>
-            <div class="row">
-                <label>高 cm</label>
-                <input id="height" type="number" placeholder="包裹高度">
-            </div>
-            <div class="row">
-                <label>实际重量 kg</label>
-                <input id="realWeight" type="number" placeholder="包裹实际称重">
-            </div>
-            <div class="row">
-                <label>材积系数（Temu常用：5000）</label>
-                <input id="divisor" type="number" value="5000">
-            </div>
-            <div id="result">结果将显示在这里</div>
+        <div class="row">
+            <label>
+                <span class="lang zh">宽 cm</span>
+                <span class="lang en" style="display:none">Width cm</span>
+            </label>
+            <input type="number" class="trans-placeholder" id="w" data-zh="输入宽度" data-en="Input width">
+        </div>
+        <div class="row">
+            <label>
+                <span class="lang zh">高 cm</span>
+                <span class="lang en" style="display:none">Height cm</span>
+            </label>
+            <input type="number" class="trans-placeholder" id="h" data-zh="输入高度" data-en="Input height">
+        </div>
+        <div id="result">
+            <span class="lang zh">体积重：</span>
+            <span class="lang en" style="display:none">Volumetric Weight:</span>
+            <span id="numPart"></span>
         </div>
     </div>
+</div>
 
 <script>
-function calc(){
-    const l = parseFloat(document.getElementById('length').value);
-    const w = parseFloat(document.getElementById('width').value);
-    const h = parseFloat(document.getElementById('height').value);
-    const realW = parseFloat(document.getElementById('realWeight').value);
-    const divisor = parseFloat(document.getElementById('divisor').value);
-    let res = "";
+const l = document.getElementById('l');
+const w = document.getElementById('w');
+const h = document.getElementById('h');
+const numPart = document.getElementById('numPart');
 
-    if(isNaN(l) || isNaN(w) || isNaN(h) || isNaN(divisor)){
-        res = "请输入长宽高和材积系数";
+function calcVol(){
+    let L = Number(l.value);
+    let W = Number(w.value);
+    let H = Number(h.value);
+    if(!isNaN(L) && !isNaN(W) && !isNaN(H) && L>0 && W>0 && H>0){
+        let volWt = (L * W * H) / 6000;
+        numPart.innerText = volWt.toFixed(3)+" kg";
     }else{
-        const volumeWeight = (l * w * h) / divisor;
-        res = `体积重：${volumeWeight.toFixed(3)} kg\n`;
-        if(!isNaN(realW)){
-            const billWeight = Math.max(volumeWeight, realW);
-            res += `实际重量：${realW.toFixed(3)} kg\n`;
-            res += `计费重取较大值：${billWeight.toFixed(3)} kg`;
-        }else{
-            res += `未填写实际重量，仅算出体积重`;
-        }
+        numPart.innerText = "";
     }
-    document.getElementById("result").innerText = res;
 }
-document.getElementById('length').oninput = calc;
-document.getElementById('width').oninput = calc;
-document.getElementById('height').oninput = calc;
-document.getElementById('realWeight').oninput = calc;
-document.getElementById('divisor').oninput = calc;
+l.oninput=calcVol;
+w.oninput=calcVol;
+h.oninput=calcVol;
+
+let currentLang = "en";
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("webLang", lang);
+    document.querySelectorAll(".lang").forEach(el => {
+        el.style.display = el.classList.contains(lang) ? "inline" : "none";
+    });
+    document.querySelectorAll(".trans-placeholder").forEach(input => {
+        input.placeholder = input.dataset[lang];
+    });
+}
+window.onload = function () {
+  const savedLang = localStorage.getItem("webLang");
+  if(savedLang){
+    currentLang = savedLang;
+  }
+  switchLang(currentLang);
+}
 </script>
 </body>
 </html>

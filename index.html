@@ -1,94 +1,102 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- 移动端适配，手机打开正常显示 -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Temu跨境卖家工具 | 在线换算</title>
+    <title><span class="lang zh">跨境电商单位换算工具 | 首页</span><span class="lang en" style="display:none">Cross-border Unit Converter | Home</span></title>
     <style>
         * {
             box-sizing: border-box;
-            margin:0;
-            padding:0;
-            font-family:system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
         }
         body {
-            background-color:#f3f4f6;
+            background-color: #f3f4f6;
             padding:30px 15px;
         }
         .container{
-            max-width:700px;
+            max-width:600px;
             margin:0 auto;
         }
-        h1{
-            text-align:center;
-            color:#1f2937;
-            margin-bottom:40px;
-        }
-        .tool-card{
+        .card{
             background:#fff;
             padding:24px;
             border-radius:12px;
-            margin-bottom:18px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.08);
+            box-shadow:0 1px 3px #0000001a;
         }
-        .tool-card h2{
-            color:#2563eb;
-            margin-bottom:8px;
+        h1{
+            text-align:center;
+            margin-bottom:24px;
         }
-        .tool-card p{
-            color:#4b5563;
-            margin-bottom:12px;
-        }
-        .tool-card a{
-            display:inline-block;
-            padding:10px 18px;
+        .menu-item{
+            display:block;
+            text-align:center;
+            padding:14px;
+            margin:12px 0;
             background:#2563eb;
             color:#fff;
             text-decoration:none;
             border-radius:8px;
+            font-size:17px;
         }
-        .notice{
-            margin-top:40px;
-            font-size:14px;
-            color:#6b7280;
-            border:1px solid #ddd;
-            padding:16px;
-            border-radius:8px;
+        .menu-item:hover{
+            background:#1d4ed8;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Temu跨境卖家换算工具箱</h1>
-
-        <div class="tool-card">
-            <h2>重量换算 g ↔ lb / oz</h2>
-            <p>克、千克、磅、盎司快速转换，适合包裹称重</p>
-            <a href="weight.html">打开工具</a>
+<div class="container">
+    <div class="card">
+        <!-- 语言切换 -->
+        <div style="margin-bottom:20px;text-align:center;">
+            <button onclick="switchLang('zh')">中文</button>
+            <button onclick="switchLang('en')">English</button>
         </div>
 
-        <div class="tool-card">
-            <h2>尺寸换算 cm ↔ inch</h2>
-            <p>厘米英寸转换，商品尺寸、纸箱尺寸计算</p>
-            <a href="size.html">打开工具</a>
-        </div>
+        <h1>
+            <span class="lang zh">跨境电商换算工具</span>
+            <span class="lang en" style="display:none">Cross-border E-commerce Tool</span>
+        </h1>
 
-        <div class="tool-card">
-            <h2>材积重（体积重）计算器</h2>
-            <p>跨境物流体积重计算，对比实际重量</p>
-            <a href="volumetric.html">打开工具</a>
-        </div>
-
-        <div class="tool-card">
-            <h2>货币换算</h2>
-            <p>人民币美元欧元，自定义汇率（仅估算参考）</p>
-            <a href="currency.html">打开工具</a>
-        </div>
-
-        <div class="notice">
-            ⚠️免责声明：本工具所有计算结果仅作为跨境卖家估算参考，不可作为物流结算、财务对账正式依据。
-        </div>
+        <a href="./weight.html" class="menu-item">
+            <span class="lang zh">重量换算 g ↔ lb</span>
+            <span class="lang en" style="display:none">Weight Converter g ↔ lb</span>
+        </a>
+        <a href="./size.html" class="menu-item">
+            <span class="lang zh">尺寸换算 cm ↔ inch</span>
+            <span class="lang en" style="display:none">Size Converter cm ↔ inch</span>
+        </a>
+        <a href="./volumetric.html" class="menu-item">
+            <span class="lang zh">体积重计算</span>
+            <span class="lang en" style="display:none">Volumetric Weight</span>
+        </a>
+        <a href="./currency.html" class="menu-item">
+            <span class="lang zh">货币估算 CNY ↔ USD</span>
+            <span class="lang en" style="display:none">Currency Estimate CNY ↔ USD</span>
+        </a>
     </div>
+</div>
+
+<script>
+let currentLang = "en";
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("webLang", lang);
+    document.querySelectorAll(".lang").forEach(el => {
+        el.style.display = el.classList.contains(lang) ? "inline" : "none";
+    });
+    document.querySelectorAll(".trans-placeholder").forEach(input => {
+        input.placeholder = input.dataset[lang];
+    });
+}
+window.onload = function () {
+  const savedLang = localStorage.getItem("webLang");
+  if(savedLang){
+    currentLang = savedLang;
+  }
+  switchLang(currentLang);
+}
+</script>
 </body>
 </html>

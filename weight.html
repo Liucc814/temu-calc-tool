@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>重量换算 | Temu跨境卖家工具</title>
+    <title><span class="lang zh">重量换算 | Temu跨境卖家工具</span><span class="lang en" style="display:none">Weight Converter | Cross-border Seller Tool</span></title>
     <style>
         * {
             box-sizing: border-box;
-            margin:0;
-            padding:0;
-            font-family:system-ui, sans-serif;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, sans-serif;
         }
         body {
-            background-color:#f3f4f6;
+            background-color: #f3f4f6;
             padding:30px 15px;
         }
         .container{
@@ -30,13 +30,7 @@
             background:#fff;
             padding:24px;
             border-radius:12px;
-            box-shadow:0 2px 8px rgba(0,0,0,0.08);
-        }
-        h1{
-            text-align:center;
-            color:#1f2937;
-            margin-bottom:24px;
-            font-size:22px;
+            box-shadow:0 1px 3px #0000001a;
         }
         .row{
             margin:16px 0;
@@ -44,72 +38,136 @@
         label{
             display:block;
             margin-bottom:6px;
-            color:#444;
         }
-        input,select{
+        input{
             width:100%;
             padding:10px;
-            font-size:16px;
-            border:1px solid #ccc;
+            border:1px solid #ddd;
             border-radius:6px;
+            font-size:16px;
+        }
+        button{
+            padding:10px 18px;
+            background:#2563eb;
+            color:#fff;
+            border:none;
+            border-radius:6px;
+            cursor:pointer;
+            font-size:16px;
         }
         #result{
             margin-top:20px;
-            padding:14px;
-            background:#f0f7ff;
-            border-radius:8px;
-            font-size:17px;
+            font-size:18px;
+            font-weight:bold;
+        }
+        .tip{
+            color:#666;
+            font-size:14px;
+            margin-top:6px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="back">
-            <a href="index.html">← 返回工具箱首页</a>
-        </div>
-        <div class="card">
-            <h1>重量换算 g / kg ↔ lb / oz</h1>
-            <div class="row">
-                <label>输入数值</label>
-                <input id="num" type="number" placeholder="例如 3000">
-            </div>
-            <div class="row">
-                <label>换算类型</label>
-                <select id="type">
-                    <option value="g2lb">克(g) → 磅(lb)</option>
-                    <option value="lb2g">磅(lb) → 克(g)</option>
-                    <option value="g2oz">克(g) → 盎司(oz)</option>
-                    <option value="oz2g">盎司(oz) → 克(g)</option>
-                    <option value="kg2lb">千克(kg) → 磅(lb)</option>
-                    <option value="lb2kg">磅(lb) → 千克(kg)</option>
-                </select>
-            </div>
-            <div id="result">换算结果将显示在这里</div>
-        </div>
+<div class="container">
+    <!-- 返回首页 -->
+    <div class="back">
+        <a href="./index.html">
+            <span class="lang zh">← 返回首页</span>
+            <span class="lang en" style="display:none">← Back Home</span>
+        </a>
     </div>
 
+    <!-- 语言切换按钮 -->
+    <div style="margin-bottom:20px;">
+        <button onclick="switchLang('zh')">中文</button>
+        <button onclick="switchLang('en')">English</button>
+    </div>
+
+    <div class="card">
+        <h1>
+            <span class="lang zh">重量换算 g ↔ lb</span>
+            <span class="lang en" style="display:none">Weight Conversion g ↔ lb</span>
+        </h1>
+        <p class="tip">
+            <span class="lang zh">1磅(lb) = 453.59237克(g)</span>
+            <span class="lang en" style="display:none">1 lb = 453.59237 g</span>
+        </p>
+
+        <div class="row">
+            <label>
+                <span class="lang zh">输入克(g)</span>
+                <span class="lang en" style="display:none">Enter Gram(g)</span>
+            </label>
+            <input type="number" class="trans-placeholder" id="gram" data-zh="请输入克数" data-en="Input gram value">
+        </div>
+
+        <div class="row">
+            <label>
+                <span class="lang zh">输入磅(lb)</span>
+                <span class="lang en" style="display:none">Enter Pound(lb)</span>
+            </label>
+            <input type="number" class="trans-placeholder" id="lb" data-zh="请输入磅数" data-en="Input pound value">
+        </div>
+
+        <div id="result">
+            <span class="lang zh">换算结果：</span>
+            <span class="lang en" style="display:none">Result:</span>
+            <span id="numPart"></span>
+        </div>
+    </div>
+</div>
+
 <script>
-function calc(){
-    const n = parseFloat(document.getElementById('num').value);
-    const t = document.getElementById('type').value;
-    let res = "";
-    if(isNaN(n)){
-        res = "请输入有效数字";
+// 重量双向换算
+const gramInput = document.getElementById('gram');
+const lbInput = document.getElementById('lb');
+const numPart = document.getElementById('numPart');
+
+gramInput.oninput = function(){
+    let g = Number(this.value);
+    if(!isNaN(g) && g>0){
+        let res = g / 453.59237;
+        lbInput.value = res.toFixed(4);
+        numPart.innerText = `${g} g = ${res.toFixed(4)} lb`;
     }else{
-        //换算标准：1lb=453.59237g  1lb=16oz
-        switch(t){
-            case "g2lb": res = `${n} g = ${(n/453.59237).toFixed(4)} lb`;break;
-            case "lb2g": res = `${n} lb = ${(n*453.59237).toFixed(2)} g`;break;
-            case "g2oz": res = `${n} g = ${(n/28.3495).toFixed(4)} oz`;break;
-            case "oz2g": res = `${n} oz = ${(n*28.3495).toFixed(2)} g`;break;
-            case "kg2lb": res = `${n} kg = ${(n*2.20462).toFixed(4)} lb`;break;
-            case "lb2kg": res = `${n} lb = ${(n/2.20462).toFixed(4)} kg`;break;
-        }
+        lbInput.value = '';
+        numPart.innerText = '';
     }
-    document.getElementById("result").innerText = res;
 }
-document.getElementById('num').oninput = calc;
-document.getElementById('type').onchange = calc;
+lbInput.oninput = function(){
+    let lb = Number(this.value);
+    if(!isNaN(lb) && lb>0){
+        let res = lb * 453.59237;
+        gramInput.value = res.toFixed(2);
+        numPart.innerText = `${lb} lb = ${res.toFixed(2)} g`;
+    }else{
+        gramInput.value = '';
+        numPart.innerText = '';
+    }
+}
+
+// ========== 双语切换JS ==========
+let currentLang = "en";
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem("webLang", lang);
+    // 切换文字
+    document.querySelectorAll(".lang").forEach(el => {
+        el.style.display = el.classList.contains(lang) ? "inline" : "none";
+    });
+    // 切换输入框placeholder
+    document.querySelectorAll(".trans-placeholder").forEach(input => {
+        input.placeholder = input.dataset[lang];
+    });
+}
+// 页面加载读取保存语言
+window.onload = function () {
+  const savedLang = localStorage.getItem("webLang");
+  if(savedLang){
+    currentLang = savedLang;
+  }
+  switchLang(currentLang);
+}
 </script>
 </body>
 </html>
